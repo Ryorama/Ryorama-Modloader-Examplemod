@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id("fabric-loom") version "0.5-SNAPSHOT"
+}
+
+java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this task, sources will not be generated.
+    withSourcesJar()
+}
+
+configurations {
+    extraLibs
+}
+
+repositories {
+    maven { url 'https://maven.fabricmc.net' }
+    maven { url 'https://clojars.org/repo/' }
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:1.16.4"
+    mappings "net.fabricmc:yarn:1.16.4+build.9:v2"
+
+    implementation "org.ow2.asm:asm-tree:${project.asm_version}"
+
+    annotationProcessor "org.ow2.asm:asm-tree:${project.asm_version}"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    compile files ('libs/RyoramaModloader.jar')
+}
+
+ext {
+    MANIFEST = manifest {
+        attributes('Main-Class': 'com.ryorama.testmod.ContentMod')
+    }
+}
+
+jar {
+    manifest.from(MANIFEST)
+}
